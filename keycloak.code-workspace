@@ -1,0 +1,102 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {},
+  "launch": {
+	"configurations": [
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Keycloak Self Contained",
+			"url": "http://localhost:80",
+			"preLaunchTask":"launch:self:contained",
+			"postDebugTask": "stop:self:contained" 
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch Keycloak Proxied",
+			"url": "http://localhost:80",
+			"preLaunchTask":"launch:proxied",
+			"postDebugTask": "stop:proxied" 
+		}
+	],
+	"compounds": []
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+     		 {
+				"type": "docker-compose",
+				"label": "launch:self:contained",
+				"isBackground": false,
+				"options": {
+					"cwd": "${workspaceFolder}/self-contained"          
+				},
+				"dockerCompose": {
+				  "up": {
+					"detached": true,
+					"build": true,
+					"customOptions": "",
+				  },
+				  "files": [
+					"${workspaceFolder}/self-contained/docker-compose.yaml"
+				  ],
+				},
+				"problemMatcher": []
+			},
+      		{
+				"type": "docker-compose",
+				"label": "stop:self:contained",
+					"options": {
+					"cwd": "${workspaceFolder}/self-contained"          
+				},
+				"dockerCompose": {
+					"down": {
+					"removeVolumes":false
+					},
+					"files": [
+            			"${workspaceFolder}/self-contained/docker-compose.yaml"
+					]
+				},      
+			},
+			{
+				"type": "docker-compose",
+				"label": "launch:proxied",
+				"isBackground": false,
+				"options": {
+					"cwd": "${workspaceFolder}/proxied"          
+				},
+				"dockerCompose": {
+				  "up": {
+					"detached": true,
+					"build": true,
+					"customOptions": "",
+				  },
+				  "files": [
+					"${workspaceFolder}/proxied/docker-compose.yaml"
+				  ],
+				},
+				"problemMatcher": []
+			},
+      		{
+				"type": "docker-compose",
+				"label": "stop:proxied",
+					"options": {
+					"cwd": "${workspaceFolder}/proxied"          
+				},
+				"dockerCompose": {
+					"down": {
+					"removeVolumes":false
+					},
+					"files": [
+            			"${workspaceFolder}/proxied/docker-compose.yaml"
+					]
+				},      
+			}
+    ]
+  }
+}
